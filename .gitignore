@@ -30,6 +30,7 @@ languageServer/**
 languageServer.*/**
 bin/**
 obj/**
+AI_env/**
 .pytest_cache
 tmp/**
 .python-version
