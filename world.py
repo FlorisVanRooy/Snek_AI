@@ -9,9 +9,9 @@ class World:
         # Initialize species: a list of Population objects.
         self.species = [Population(pop_size) for _ in range(species_number)]
         
-    def update(self):
+    def update(self, screen):
         for population in self.species:
-            population.update()
+            population.update(screen)
 
     def genetic_algorithm(self):
         for population in self.species:
@@ -20,7 +20,6 @@ class World:
             # population.mutate()
         self.gen += 1
         self.set_top_score()
-        print("Generation", self.gen, "has a top score of", self.top_score)
 
     def done(self):
         for population in self.species:

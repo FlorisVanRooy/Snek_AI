@@ -13,8 +13,10 @@ class Snake:
         self.tail_positions = [
             [WIDTH // 2 - BLOCK_SIZE, HEIGHT // 2],
             [WIDTH // 2 - 2 * BLOCK_SIZE, HEIGHT // 2],
-            [WIDTH // 2 - 3 * BLOCK_SIZE, HEIGHT // 2]
+            [WIDTH // 2 - 3 * BLOCK_SIZE, HEIGHT // 2],
+            [WIDTH // 2 - 4 * BLOCK_SIZE, HEIGHT // 2],
         ]
+
         self.direction = DIRECTIONS[1]
         self.brain: Sequential = build_model(24, 3)
         self.alive = True 
@@ -23,7 +25,7 @@ class Snake:
         self.lifetime = 0
         self.left_to_live = 200
         self.fitness = 0
-        self.length = 4
+        self.length = 5
 
     def is_alive(self):
         """Returns whether the snake is alive."""
@@ -101,7 +103,7 @@ class Snake:
         if self.head == self.food:
             self.eat()
         else:
-            self.tail_positions.insert(0, self.head)
+            self.tail_positions.insert(0, self.head.copy())
             self.tail_positions.pop()
             self.head[0] += self.direction[0]
             self.head[1] += self.direction[1]
@@ -179,3 +181,18 @@ class Snake:
             w_new = w + mutation_mask * noise
             new_weights.append(w_new)
         self.brain.set_weights(new_weights)
+
+    def show(self, screen):
+        """Draws the snake (head and tail) and the food on the screen."""
+        white = (255, 255, 255)
+        black = (0, 0, 0)
+        
+        # Draw the tail
+        for segment in self.tail_positions:
+            pygame.draw.rect(screen, white, (segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE))
+
+        # Draw the head
+        pygame.draw.rect(screen, white, (self.head[0], self.head[1], BLOCK_SIZE, BLOCK_SIZE))
+
+        # Draw the food
+        self.food.show(screen)  # Assuming `food.show()` is a method that draws the food

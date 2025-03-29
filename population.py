@@ -9,12 +9,15 @@ class Population:
         self.max_score = 0
         self.gen = 0
 
-    def update(self):
+    def update(self, screen):
+        print("updating snakes")
         for snake in self.snakes:
             if (snake.is_alive()):
                 snake.look()
                 snake.set_velocity()
                 snake.move()
+        if (self.snakes[0].is_alive()):
+            self.snakes[0].show(screen)
 
     def done(self):
         for snake in self.snakes:
