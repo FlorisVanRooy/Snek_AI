@@ -1,5 +1,7 @@
 import random
 import os
+
+from snake import Snake
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
 
@@ -9,51 +11,6 @@ os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 # Initialize Pygame
 pygame.init()
-
-# Constants
-DIRECTIONS = [(0, -20), (20, 0), (0, 20), (-20, 0)]  # Up, Right, Down, Left
-WIDTH, HEIGHT = 600, 600
-BLOCK_SIZE = 20
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-
-# The Snake class remains largely unchanged.
-class Snake:
-    def __init__(self):
-        # Start with two segments for demonstration
-        self.positions = [(WIDTH // 2, HEIGHT // 2),
-                          (WIDTH // 2 - BLOCK_SIZE, HEIGHT // 2)]
-        self.direction = (0, -BLOCK_SIZE)  # Starting moving up
-
-    def move(self):
-        head_x, head_y = self.positions[0]
-        dx, dy = self.direction
-        new_head = (head_x + dx, head_y + dy)
-        self.positions.insert(0, new_head)
-        self.positions.pop()  # Remove tail unless food is eaten
-
-    def grow(self):
-        # When the snake eats food, we add a segment by not removing the tail.
-        self.positions.append(self.positions[-1])
-
-    def draw(self, surface):
-        for pos in self.positions:
-            pygame.draw.rect(surface, GREEN, (pos[0], pos[1], BLOCK_SIZE, BLOCK_SIZE))
-
-
-class Food:
-    def __init__(self):
-        self.respawn()
-
-    def respawn(self):
-        self.position = (random.randrange(0, WIDTH, BLOCK_SIZE),
-                         random.randrange(0, HEIGHT, BLOCK_SIZE))
-
-    def draw(self, surface):
-        pygame.draw.rect(surface, RED, (self.position[0], self.position[1], BLOCK_SIZE, BLOCK_SIZE))
-
-
 # The SnakeGame class encapsulates the game loop and state.
 class SnakeGame:
     def __init__(self, width=WIDTH, height=HEIGHT, block_size=BLOCK_SIZE):

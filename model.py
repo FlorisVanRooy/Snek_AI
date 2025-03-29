@@ -14,8 +14,3 @@ def build_model(input_size, output_size):
         Dense(output_size, activation='softmax')
     ])
     return model
-
-# Example usage:
-input_size = 14  # Adjust based on how many state features you include
-output_size = 3  # [turn left, straight, turn right]
-model = build_model(input_size, output_size)

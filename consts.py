@@ -1,0 +1,8 @@
+WIDTH, HEIGHT = 600, 600
+BLOCK_SIZE = 20
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+DIRECTIONS = [(0, -BLOCK_SIZE), (BLOCK_SIZE, 0), (0, BLOCK_SIZE), (-BLOCK_SIZE, 0)]  # Up, Right, Down, Left
+ALL_DIRECTIONS = [(-BLOCK_SIZE, 0), (-BLOCK_SIZE, -BLOCK_SIZE), (0, -BLOCK_SIZE), (BLOCK_SIZE, -BLOCK_SIZE),
+                      (BLOCK_SIZE, 0), (BLOCK_SIZE, BLOCK_SIZE), (0, BLOCK_SIZE), (-BLOCK_SIZE, BLOCK_SIZE)] # Left, UpLeft, Up, UpRight, Right, DownRight, Down, DownLeft
