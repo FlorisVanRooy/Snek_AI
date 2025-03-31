@@ -4,7 +4,7 @@ from action import get_action, set_action
 from consts import ALL_DIRECTIONS, BLOCK_SIZE, DIRECTIONS, GREEN, HEIGHT, WIDTH
 from food import Food
 from model import build_model
-from tensorflow.keras.models import Sequential # type: ignore
+from neural_network import NeuralNet # type: ignore
 
 
 class Snake:
@@ -18,7 +18,7 @@ class Snake:
         ]
 
         self.direction = DIRECTIONS[1]
-        self.brain: Sequential = build_model(24, 3)
+        self.brain = NeuralNet(24, 16, 4)
         self.alive = True 
         self.food = Food()
         self.vision = []
@@ -89,7 +89,8 @@ class Snake:
         return any(segment == pos for segment in self.tail_positions)
 
     def set_velocity(self):
-        action = get_action(self.brain, self.vision)
+        output = self.brain.output(self.vision)
+        action = output.index(max(output))
         if action != 1:
             self.direction = set_action(action, self.direction)
 
@@ -142,25 +143,9 @@ class Snake:
         return clone
     
     def crossover(self, wife: "Snake") -> "Snake":
-        # Create a child snake instance.
         child = Snake()
 
-        # Retrieve the weights from both parents' brains.
-        weights_self = self.brain.get_weights()
-        weights_wife = wife.brain.get_weights()
-
-        new_weights = []
-        # For each corresponding weight array, combine them.
-        for w_self, w_wife in zip(weights_self, weights_wife):
-            # Create a mask with the same shape as the weight matrix,
-            # where each element is True or False randomly.
-            mask = np.random.rand(*w_self.shape) > 0.5
-            # Use the mask to pick weights from either parent.
-            child_weights = np.where(mask, w_self, w_wife)
-            new_weights.append(child_weights)
-
-        # Set the new weights in the child's brain.
-        child.brain.set_weights(new_weights)
+        child.brain = self.brain.crossover(wife.brain)
         return child
     
     def mutate(self, mutation_rate: float):
@@ -170,17 +155,7 @@ class Snake:
         Each weight in the brain has a chance (mutation_rate) to be perturbed by adding
         a small random noise, often sampled from a normal distribution.
         """
-        weights = self.brain.get_weights()  # get the current weights as a list of numpy arrays
-        new_weights = []
-        for w in weights:
-            # Create a mutation mask: True where mutation occurs.
-            mutation_mask = np.random.rand(*w.shape) < 0.75
-            # Create noise: small random changes from a normal distribution.
-            noise = np.random.randn(*w.shape) * mutation_rate
-            # Only mutate where the mask is True.
-            w_new = w + mutation_mask * noise
-            new_weights.append(w_new)
-        self.brain.set_weights(new_weights)
+        self.brain.mutate(mutation_rate)
 
     def show(self, screen):
         """Draws the snake (head and tail) and the food on the screen."""

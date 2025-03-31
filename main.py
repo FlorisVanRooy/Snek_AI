@@ -12,7 +12,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake AI")
 
 # Define speed and mutation rate
-speed = 30
+speed = 5
+clock = pygame.time.Clock()
 global_mutation_rate = 0.05
 
 # def draw_data(screen, world: "World", speed, global_mutation_rate):
@@ -45,7 +46,7 @@ def draw(screen, world: "World", speed, global_mutation_rate):
     pygame.display.flip()  # Refresh screen
 
 # Create the world
-world = World(1, 5)
+world = World(1, 20)
 
 # Game loop
 running = True
@@ -55,5 +56,6 @@ while running:
             running = False
 
     draw(screen, world, speed, global_mutation_rate)
+    clock.tick(speed)
 
 pygame.quit()

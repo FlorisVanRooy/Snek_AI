@@ -16,8 +16,7 @@ class Population:
                 snake.look()
                 snake.set_velocity()
                 snake.move()
-        if (self.snakes[0].is_alive()):
-            self.snakes[0].show(screen)
+                snake.show(screen)
 
     def done(self):
         for snake in self.snakes:
