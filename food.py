@@ -12,6 +12,9 @@ class Food:
     def respawn(self):
         self.position = (random.randrange(0, WIDTH, BLOCK_SIZE),
                          random.randrange(0, HEIGHT, BLOCK_SIZE))
+        
+    def spawn(self):
+        self.position = (180, 340)
     
     def show(self, screen):
         red = (255, 0, 0)

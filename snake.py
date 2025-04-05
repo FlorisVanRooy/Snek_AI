@@ -3,7 +3,6 @@ import pygame
 from action import get_action, set_action
 from consts import ALL_DIRECTIONS, BLOCK_SIZE, DIRECTIONS, GREEN, HEIGHT, WIDTH
 from food import Food
-from model import build_model
 from neural_network import NeuralNet # type: ignore
 
 
@@ -21,6 +20,7 @@ class Snake:
         self.brain = NeuralNet(24, 16, 4)
         self.alive = True 
         self.food = Food()
+        self.food.spawn()
         self.vision = []
         self.lifetime = 0
         self.left_to_live = 200
@@ -87,6 +87,7 @@ class Snake:
     def is_on_tail(self, pos):
         """Checks if the given position is part of the snake's tail."""
         return any(segment == pos for segment in self.tail_positions)
+    
 
     def set_velocity(self):
         output = self.brain.output(self.vision)
@@ -98,10 +99,12 @@ class Snake:
         self.lifetime += 1
         self.left_to_live -= 1
         if self.left_to_live <= 0:
+            if self.length > 5:
+                print("Died to low lifetime")
             self.alive = False
         if self.gonna_die():
             self.alive = False
-        if self.head == self.food:
+        if self.head[0] == self.food.position[0] and self.head[1] == self.food.position[1]:
             self.eat()
         else:
             self.tail_positions.insert(0, self.head.copy())
@@ -117,7 +120,7 @@ class Snake:
         self.grow()
 
     def grow(self):
-        self.tail_positions.insert(0, self.head)
+        self.tail_positions.insert(0, self.head.copy())
         self.head[0] += self.direction[0]
         self.head[1] += self.direction[1]
         self.length += 1
@@ -129,8 +132,10 @@ class Snake:
         return self.is_on_tail(self.head)
     
     def calc_fitness(self):
+        if self.length > 5 and self.length < 7:
+            self.fitness += 2000000
         if self.length < 10:
-            self.fitness = np.floor(self.lifetime * self.lifetime * pow(2, np.floor(self.length)))
+            self.fitness += np.floor(self.lifetime * self.lifetime * pow(2, np.floor(self.length)))
         else:
             self.fitness = self.lifetime * self.lifetime
             self.fitness *= pow(2, 10)

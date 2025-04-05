@@ -10,7 +10,6 @@ class Population:
         self.gen = 0
 
     def update(self, screen):
-        print("updating snakes")
         for snake in self.snakes:
             if (snake.is_alive()):
                 snake.look()
@@ -23,7 +22,7 @@ class Population:
             if (snake.is_alive()):
                 return False
             
-            return True
+        return True
         
     def calc_fitness(self):
         for snake in self.snakes:
@@ -43,12 +42,12 @@ class Population:
 
         new_snakes.append(self.current_best_snake)
 
-        for i in range(len(self.snakes)):
+        for i in range(len(self.snakes)-1):
             parent1 = self.select_snake()
             parent2 = self.select_snake()
 
             child = parent1.crossover(parent2)
-            child.mutate(0.05)
+            child.mutate(0.2)
 
             new_snakes.append(child)
 
